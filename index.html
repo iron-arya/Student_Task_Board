@@ -4,147 +4,194 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Task Board</title>
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body class="light-mode">
     <div class="app-shell">
+
         <header class="app-header">
-            <div>
+            <div class="header-title">
                 <p class="eyebrow">College Project</p>
-                <h1><i class="bi bi-clipboard-check"></i> Student Task Board</h1>
+                <h1>
+                    <i class="bi bi-clipboard-check"></i>
+                    Student Task Board
+                </h1>
             </div>
+
             <div class="header-actions">
                 <button type="button" id="modeButton" class="mode-button">
                     <i class="bi bi-moon-stars"></i>
                     <span>Dark Mode</span>
                 </button>
 
-                <input type="search"
-                       id="searchInput"
-                       class="search-input"
-                       placeholder="🔍 Search Tasks">
+                <input
+                    type="search"
+                    id="searchInput"
+                    class="search-input"
+                    placeholder="Search by title, tag, priority..."
+                >
             </div>
         </header>
-<main class="board-layout">
 
-    <section class="task-form-panel" aria-labelledby="formTitle">
-        <h2 id="formTitle">Add New Task</h2>
+        <main class="board-layout">
 
-        <form id="taskForm" novalidate>
-            <input type="hidden" id="taskId">
+            <section class="task-form-panel" aria-labelledby="formTitle">
+                <div class="panel-heading">
+                    <p class="panel-kicker">Create task</p>
+                    <h2 id="formTitle">Add New Task</h2>
+                </div>
 
-            <div class="form-group">
-                <label for="taskTitle">Task Title <span>*</span></label>
-                <input type="text" id="taskTitle" placeholder="Enter task title">
-                <small id="titleError" class="error-message"></small>
-            </div>
+                <form id="taskForm" novalidate>
+                    <input type="hidden" id="taskId">
 
-            <div class="form-group">
-                <label for="taskDescription">Task Description</label>
-                <textarea id="taskDescription" rows="4" placeholder="Write a short description"></textarea>
-            </div>
+                    <div class="form-group">
+                        <label for="taskTitle">Task Title <span>*</span></label>
+                        <input type="text" id="taskTitle" placeholder="Enter task title">
+                        <small id="titleError" class="error-message"></small>
+                    </div>
 
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="taskPriority">Priority</label>
-                    <select id="taskPriority">
-                        <option value="High">High</option>
-                        <option value="Medium" selected>Medium</option>
-                        <option value="Low">Low</option>
+                    <div class="form-group">
+                        <label for="taskDescription">Task Description</label>
+                        <textarea id="taskDescription" rows="4" placeholder="Write a short description"></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="taskPriority">Priority</label>
+                            <select id="taskPriority">
+                                <option value="High">High</option>
+                                <option value="Medium" selected>Medium</option>
+                                <option value="Low">Low</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="taskDueDate">Due Date</label>
+                            <input type="date" id="taskDueDate">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="taskTag">Task Tag</label>
+                        <input type="text" id="taskTag" placeholder="Example: JavaScript, College, UI">
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" id="submitButton" class="primary-button">
+                            <i class="bi bi-plus-circle"></i>
+                            Add Task
+                        </button>
+
+                        <button type="button" id="cancelEditButton" class="secondary-button hidden">
+                            <i class="bi bi-x-circle"></i>
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </section>
+
+            <section class="task-board-section" aria-label="Student task board">
+
+                <div class="board-stats">
+                    <div class="stat-card">
+                        <span class="stat-icon">
+                            <i class="bi bi-kanban"></i>
+                        </span>
+                        <div>
+                            <p>Total Tasks</p>
+                            <strong id="totalTaskCount">0</strong>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <span class="stat-icon">
+                            <i class="bi bi-clock-history"></i>
+                        </span>
+                        <div>
+                            <p>Pending</p>
+                            <strong id="pendingTaskCount">0</strong>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <span class="stat-icon">
+                            <i class="bi bi-check2-circle"></i>
+                        </span>
+                        <div>
+                            <p>Completed</p>
+                            <strong id="completedTaskCount">0</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="board-tools">
+                    <select id="priorityFilter" class="board-select">
+                        <option value="all">All Priority</option>
+                        <option value="High">High Priority</option>
+                        <option value="Medium">Medium Priority</option>
+                        <option value="Low">Low Priority</option>
                     </select>
+
+                    <select id="sortTasks" class="board-select">
+                        <option value="newest">Newest First</option>
+                        <option value="oldest">Oldest First</option>
+                        <option value="dueDate">Due Date</option>
+                    </select>
+
+                    <button type="button" id="clearAllButton" class="danger-button">
+                        <i class="bi bi-trash3"></i>
+                        Clear All
+                    </button>
                 </div>
 
-                <div class="form-group">
-                    <label for="taskDueDate">Due Date</label>
-                    <input type="date" id="taskDueDate">
+                <div class="task-board">
+                    <article class="task-column" data-status="todo">
+                        <header class="column-header">
+                            <h2>
+                                <i class="bi bi-list-task"></i>
+                                To Do
+                                <span id="todoCount">0</span>
+                            </h2>
+                        </header>
+
+                        <div class="task-list" id="todoList" data-status="todo"></div>
+                    </article>
+
+                    <article class="task-column" data-status="inProgress">
+                        <header class="column-header">
+                            <h2>
+                                <i class="bi bi-hourglass-split"></i>
+                                In Progress
+                                <span id="inProgressCount">0</span>
+                            </h2>
+                        </header>
+
+                        <div class="task-list" id="inProgressList" data-status="inProgress"></div>
+                    </article>
+
+                    <article class="task-column" data-status="done">
+                        <header class="column-header">
+                            <h2>
+                                <i class="bi bi-check2-circle"></i>
+                                Done
+                                <span id="doneCount">0</span>
+                            </h2>
+                        </header>
+
+                        <div class="task-list" id="doneList" data-status="done"></div>
+                    </article>
                 </div>
-            </div>
 
-            <div class="form-group">
-                <label for="taskTag">Task Tag</label>
-                <input type="text" id="taskTag" placeholder="Example: JavaScript, College, UI">
-            </div>
+                <p class="board-footer-text">
+                    <i class="bi bi-arrows-move"></i>
+                    Drag tasks between columns to update progress.
+                </p>
+            </section>
 
-            <div class="form-actions">
-                <button type="submit" id="submitButton" class="primary-button">
-                    <i class="bi bi-plus-circle"></i> Add Task
-                </button>
-
-                <button type="button" id="cancelEditButton" class="secondary-button hidden">
-                    <i class="bi bi-x-circle"></i> Cancel
-                </button>
-            </div>
-        </form>
-    </section>
-
-    <section class="task-board-section" aria-label="Student task board">
-
-        <div class="board-stats">
-            <div class="stat-card">
-                <p>Total Tasks</p>
-                <strong id="totalTaskCount">0</strong>
-            </div>
-
-            <div class="stat-card">
-                <p>Pending</p>
-                <strong id="pendingTaskCount">0</strong>
-            </div>
-
-            <div class="stat-card">
-                <p>Completed</p>
-                <strong id="completedTaskCount">0</strong>
-            </div>
-        </div>
-
-        <div class="board-tools">
-            <select id="priorityFilter" class="board-select">
-                <option value="all">All Priority</option>
-                <option value="High">High Priority</option>
-                <option value="Medium">Medium Priority</option>
-                <option value="Low">Low Priority</option>
-            </select>
-
-            <select id="sortTasks" class="board-select">
-                <option value="newest">Newest First</option>
-                <option value="oldest">Oldest First</option>
-                <option value="dueDate">Due Date</option>
-            </select>
-
-            <button type="button" id="clearAllButton" class="danger-button">
-                <i class="bi bi-trash3"></i> Clear All
-            </button>
-        </div>
-
-        <div class="task-board">
-            <article class="task-column" data-status="todo">
-                <header class="column-header">
-                    <h2><i class="bi bi-list-task"></i> To Do <span id="todoCount">0</span></h2>
-                </header>
-                <div class="task-list" id="todoList" data-status="todo"></div>
-            </article>
-
-            <article class="task-column" data-status="inProgress">
-                <header class="column-header">
-                    <h2><i class="bi bi-hourglass-split"></i> In Progress <span id="inProgressCount">0</span></h2>
-                </header>
-                <div class="task-list" id="inProgressList" data-status="inProgress"></div>
-            </article>
-
-            <article class="task-column" data-status="done">
-                <header class="column-header">
-                    <h2><i class="bi bi-check2-circle"></i> Done <span id="doneCount">0</span></h2>
-                </header>
-                <div class="task-list" id="doneList" data-status="done"></div>
-            </article>
-        </div>
-
-        <p class="board-footer-text">
-            Drag tasks between columns to update progress.
-        </p>
-    </section>
-
-</main>
+        </main>
     </div>
 
     <script src="storage.js"></script>
