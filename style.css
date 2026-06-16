@@ -98,14 +98,17 @@ button {
 
 .header-actions {
     display: flex;
-    align-items: center;
-    gap: 12px;
-    width: min(550px, 100%);
+    align-items: flex-start;
+    gap: 15px;
+    width: min(650px, 100%);
 }
 
 .mode-button {
     width: 180px;
     flex-shrink: 0;
+}
+.search-box {
+    flex: 1;
 }
 
 .search-input {
@@ -114,10 +117,7 @@ button {
 
 .search-label {
     display: block;
-    margin-bottom: 8px;
-    color: var(--light-background);
-    font-size: 0.9rem;
-    font-weight: 700;
+    margin-bottom: 6px;
 }
 
 .search-input,
